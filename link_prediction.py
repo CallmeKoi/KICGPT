@@ -417,9 +417,9 @@ def parse_args():
     parser.add_argument('--device', default=0, help='the gpu device')
     
     parser.add_argument('--api_key', default="", type=str)
-    parser.add_argument('--demon_per_step', default=8)
-    parser.add_argument('--eff_demon_step', default=10)
-    parser.add_argument('--max_demon_step', default=10)
+    parser.add_argument('--demon_per_step', default=4)
+    parser.add_argument('--eff_demon_step', default=5)
+    parser.add_argument('--max_demon_step', default=5)
     parser.add_argument('--max_llm_input_tokens', default=3750, type=int)
     parser.add_argument('--num_process', default=1, type=int, help='the number of multi-process')
 
