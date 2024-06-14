@@ -377,7 +377,7 @@ def parse_args():
 
     parser.add_argument('--align_text', action="store_true")
     
-    parser.add_argument('--max_tokens', default=300, type=int, help='max-token')
+    parser.add_argument('--max_tokens', default=250, type=int, help='max-token')
     parser.add_argument('--prompt_path', default="./prompts/link_prediction_scoring.json")
     parser.add_argument('--prompt_name', default="chat", )
     parser.add_argument('--bagging_type', default="llm", )
