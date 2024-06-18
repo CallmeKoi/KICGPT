@@ -3,15 +3,18 @@ import time
 
 import argparse
 import json
+import os
 
 id2entity_name = defaultdict(str)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default=None)
+parser.add_argument("--directory", type=str, default=None)
 args = parser.parse_args()
 
+DATASET_DIR = os.path.join(args.directory, 'dataset', args.dataset)
 
-with open('dataset/' + args.dataset + '/get_neighbor/entity2id.txt', 'r') as file:
+with open(DATASET_DIR + 'get_neighbor/entity2id.txt', 'r') as file:
     entity_lines = file.readlines()
     for line in entity_lines:
         _name, _id = line.strip().split("\t")
@@ -19,7 +22,7 @@ with open('dataset/' + args.dataset + '/get_neighbor/entity2id.txt', 'r') as fil
 
 id2relation_name = defaultdict(str)
 
-with open('dataset/' + args.dataset + '/get_neighbor/relation2id.txt', 'r') as file:
+with open(DATASET_DIR + 'get_neighbor/relation2id.txt'), 'r') as file:
     relation_lines = file.readlines()
     for line in relation_lines:
         _name, _id = line.strip().split("\t")
@@ -28,16 +31,16 @@ with open('dataset/' + args.dataset + '/get_neighbor/relation2id.txt', 'r') as f
 train_triplet = []
 test_triplet = []
 
-for line in open('dataset/' + args.dataset + '/get_neighbor/train2id.txt', 'r'):
+for line in open(DATASET_DIR + 'get_neighbor/train2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     train_triplet.append(list((int(head), int(relation), int(tail))))
 
-for line in open('dataset/' + args.dataset + '/get_neighbor/test2id.txt', 'r'):
+for line in open(DATASET_DIR + '/get_neighbor/test2id.txt'), 'r'):
     head, relation, tail = line.strip('\n').split()
     # train_triplet.append(list((int(head), int(relation), int(tail))))
     test_triplet.append(list((int(head), int(relation), int(tail))))
 
-for line in open('dataset/'+args.dataset+'/get_neighbor/valid2id.txt', 'r'):
+for line in open(DATASET_DIR + '/get_neighbor/valid2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     train_triplet.append(list((int(head), int(relation), int(tail))))
 

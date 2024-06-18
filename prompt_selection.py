@@ -1,9 +1,16 @@
 '''
-Prompt Engineering: 1. Add comparable  2. Add confidence scoreto better and confident to be best. 3. Final Have a try again 4. rethinking 5.vote 6.repeat
-7.iterative or accumulated update  8.question is/are
+Prompt Engineering: 
+1. Add comparable  
+2. Add confidence score to better and confident to be best. 
+3. Final Have a try again 
+4. rethinking 
+5. vote 
+6. repeat
+7. iterative or accumulated update  
+8. question is/are
 '''
 import json
-from gensim.summarization.bm25 import BM25
+from gensim.summarization.bm25 import BM25 # deprecated => replace with alt package
 from gensim import corpora
 import operator
 from collections import defaultdict
@@ -91,9 +98,9 @@ class Demon_sampler:
         texts = ['\t'.join(triple) for triple in demon_list]
         dictionary = corpora.Dictionary([text.split() for text in texts])
         corpus = [dictionary.doc2bow(text.split()) for text in texts]
-        bm25 = BM25(corpus)
+        bm25 = BM25(corpus) #replace with alt 
         query = dictionary.doc2bow(question_text.split())
-        scores = bm25.get_scores(query)
+        scores = bm25.get_scores(query) #replace with alt
         scored_triples = list(zip(demon_list, scores))
         sorted_triples = sorted(scored_triples, key=lambda x: x[1], reverse=True)
         sorted_demon_list = [triple for triple, score in sorted_triples]
