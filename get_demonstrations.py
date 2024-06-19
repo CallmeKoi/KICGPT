@@ -15,7 +15,7 @@ args = parser.parse_args()
 DATASET_DIR = os.path.join(args.directory, args.dataset)
 OUTPUT_DIR = os.path.join(os.getcwd(), 'datasets', args.dataset)
 
-with open(DATASET_DIR + 'get_neighbor/entity2id.txt', 'r') as file:
+with open(DATASET_DIR + '/get_neighbor/entity2id.txt', 'r') as file:
     entity_lines = file.readlines()
     for line in entity_lines:
         _name, _id = line.strip().split("\t")
@@ -23,7 +23,7 @@ with open(DATASET_DIR + 'get_neighbor/entity2id.txt', 'r') as file:
 
 id2relation_name = defaultdict(str)
 
-with open(DATASET_DIR + 'get_neighbor/relation2id.txt', 'r') as file:
+with open(DATASET_DIR + '/get_neighbor/relation2id.txt', 'r') as file:
     relation_lines = file.readlines()
     for line in relation_lines:
         _name, _id = line.strip().split("\t")
@@ -32,7 +32,7 @@ with open(DATASET_DIR + 'get_neighbor/relation2id.txt', 'r') as file:
 train_triplet = []
 test_triplet = []
 
-for line in open(DATASET_DIR + 'get_neighbor/train2id.txt', 'r'):
+for line in open(DATASET_DIR + '/get_neighbor/train2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     train_triplet.append(list((int(head), int(relation), int(tail))))
 
