@@ -23,7 +23,7 @@ with open(DATASET_DIR + 'get_neighbor/entity2id.txt', 'r') as file:
 
 id2relation_name = defaultdict(str)
 
-with open(DATASET_DIR + 'get_neighbor/relation2id.txt'), 'r') as file:
+with open(DATASET_DIR + 'get_neighbor/relation2id.txt', 'r') as file:
     relation_lines = file.readlines()
     for line in relation_lines:
         _name, _id = line.strip().split("\t")
@@ -36,7 +36,7 @@ for line in open(DATASET_DIR + 'get_neighbor/train2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     train_triplet.append(list((int(head), int(relation), int(tail))))
 
-for line in open(DATASET_DIR + '/get_neighbor/test2id.txt'), 'r'):
+for line in open(DATASET_DIR + '/get_neighbor/test2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     # train_triplet.append(list((int(head), int(relation), int(tail))))
     test_triplet.append(list((int(head), int(relation), int(tail))))
