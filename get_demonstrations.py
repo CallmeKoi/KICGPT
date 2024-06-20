@@ -15,6 +15,7 @@ args = parser.parse_args()
 DATASET_DIR = os.path.join(args.directory, args.dataset)
 OUTPUT_DIR = os.path.join(os.getcwd(), 'datasets', args.dataset)
 
+print("Reading",DATASET_DIR,"/get_neighbor/entity2id.txt...")
 with open(DATASET_DIR + '/get_neighbor/entity2id.txt', 'r') as file:
     entity_lines = file.readlines()
     for line in entity_lines:
@@ -23,6 +24,7 @@ with open(DATASET_DIR + '/get_neighbor/entity2id.txt', 'r') as file:
 
 id2relation_name = defaultdict(str)
 
+print("Reading",DATASET_DIR,"/get_neighbor/relation2id.txt...")
 with open(DATASET_DIR + '/get_neighbor/relation2id.txt', 'r') as file:
     relation_lines = file.readlines()
     for line in relation_lines:
@@ -32,15 +34,18 @@ with open(DATASET_DIR + '/get_neighbor/relation2id.txt', 'r') as file:
 train_triplet = []
 test_triplet = []
 
+print("Reading",DATASET_DIR,"/get_neighbor/train2id.txt...")
 for line in open(DATASET_DIR + '/get_neighbor/train2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     train_triplet.append(list((int(head), int(relation), int(tail))))
 
+print("Reading",DATASET_DIR,"/get_neighbor/test2id.txt...")
 for line in open(DATASET_DIR + '/get_neighbor/test2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     # train_triplet.append(list((int(head), int(relation), int(tail))))
     test_triplet.append(list((int(head), int(relation), int(tail))))
 
+print("Reading",DATASET_DIR,"/get_neighbor/valid2id.txt...")
 for line in open(DATASET_DIR + '/get_neighbor/valid2id.txt', 'r'):
     head, relation, tail = line.strip('\n').split()
     train_triplet.append(list((int(head), int(relation), int(tail))))
@@ -49,6 +54,14 @@ for line in open(DATASET_DIR + '/get_neighbor/valid2id.txt', 'r'):
 graph = {}
 reverse_graph = {}
 
+def logging(func):
+    def wrapper(*args,**kwargs):
+        print("Calling",func.__name__,"...")
+        func(*args,**kwargs)
+        print("Done!")
+    return wrapper
+
+@logging
 def init_graph(graph_triplet):
 
         for triple in graph_triplet:
@@ -76,10 +89,12 @@ init_graph(train_triplet)
 
 import random
 
+@logging
 def random_delete(triplet, reserved_num): 
     reserved = random.sample(triplet, reserved_num)
     return reserved
 
+@logging
 def get_onestep_neighbors(graph, source, num_samples, reverse):
     triplet = []
     try:
@@ -96,6 +111,7 @@ def get_onestep_neighbors(graph, source, num_samples, reverse):
         triplet = [tuple((source, graph[source][nei[i]], nei[i])) for i in range(len(nei))]
     return triplet
 
+@logging
 def get_entity_neighbors(traget_entity, max_triplet):
 
     as_head_neighbors = get_onestep_neighbors(graph, traget_entity, max_triplet // 2, 0)
@@ -105,6 +121,7 @@ def get_entity_neighbors(traget_entity, max_triplet):
 
     return all_triplet
 
+@logging
 def get_one_hop_triplet(triplet):
     head_entity = triplet[0]
     tail_entity = triplet[2]
@@ -122,6 +139,7 @@ def get_one_hop_triplet(triplet):
     return temp_triplet
 
 
+@logging
 def get_all_relation_triplet(triplet):
     relation = triplet
     all_relation_triplet = []
@@ -133,6 +151,7 @@ def get_all_relation_triplet(triplet):
             all_relation_triplet.append(tuple((triple[0],triple[1],triple[2])))
     return all_relation_triplet
 
+@logging
 def get_relation_triplet(triplet):
     relation = triplet[1]
     triplet = tuple((triplet[0], triplet[1], triplet[2]))
@@ -143,7 +162,7 @@ def get_relation_triplet(triplet):
     relation_triplet = list(set(relation_triplet) - set([triplet]))
     return relation_triplet
 
-
+@logging
 def get_samelink_triplet_tail(triplet):
     head_entity = triplet[0]
     relation = triplet[1]
@@ -154,7 +173,8 @@ def get_samelink_triplet_tail(triplet):
             samelink_triplet.append(tuple((triple[0],triple[1],triple[2])))
     samelink_triplet = list(set(samelink_triplet) - set([triplet]))
     return samelink_triplet
-    
+
+@logging
 def get_samelink_triplet_head(triplet):
     tail_entity = triplet[2]
     relation = triplet[1]
@@ -166,6 +186,7 @@ def get_samelink_triplet_head(triplet):
     samelink_triplet = list(set(samelink_triplet) - set([triplet]))
     return samelink_triplet
     
+@logging
 def get_samelink_id_tail(triplet):
     head_entity = triplet[0]
     relation = triplet[1]
@@ -177,6 +198,7 @@ def get_samelink_id_tail(triplet):
     samelink_triplet = list(set(samelink_triplet) - set([triplet[2]]))
     return samelink_triplet
 
+@logging
 def get_samelink_id_head(triplet):
     tail_entity = triplet[2]
     relation = triplet[1]
@@ -192,7 +214,7 @@ def get_samelink_id_head(triplet):
 
 import copy
 
-
+@logging
 def change_(triplet_list):
     tri_text = []
     for item in triplet_list:
@@ -256,44 +278,54 @@ for key in id2relation_name:
 # Demonstration Pools
 demons_pool_path = os.path.join(OUTPUT_DIR, "demonstration")
 
+print("Writing to", demons_pool_path, "/tail_supplement.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/tail_supplement.txt"), exist_ok=True)
 with open(demons_pool_path + "/tail_supplement.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_h, indent=1))
 
+print("Writing to", demons_pool_path, "/head_supplement.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/head_supplement.txt"), exist_ok=True)
 with open(demons_pool_path + "/head_supplement.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_t, indent=1))
 
+print("Writing to", demons_pool_path, "/tail_analogy.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/tail_analogy.txt"), exist_ok=True)
 with open(demons_pool_path + "/tail_analogy.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_r_query_tail, indent=1))
 
+print("Writing to", demons_pool_path, "/head_analogy.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/head_analogy.txt"), exist_ok=True)
 with open(demons_pool_path + "/head_analogy.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_r_query_head, indent=1))
 
 
 # Other support files
+print("Writing to", demons_pool_path, "/T_link_base_head.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/T_link_base_head.txt"), exist_ok=True)
 with open(demons_pool_path + "/T_link_base_head.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_link_base_head, indent=1))
 
+print("Writing to", demons_pool_path, "/T_link_base_tail.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/T_link_base_tail.txt"), exist_ok=True)
 with open(demons_pool_path + "/T_link_base_tail.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_link_base_tail, indent=1))
 
+print("Writing to", demons_pool_path, "/all_r_triples.txt")
 os.makedirs(os.path.dirname(demons_pool_path + "/all_r_triples.txt"), exist_ok=True)
 with open(demons_pool_path + "/all_r_triples.txt", "w+") as file:
     file.write(json.dumps(all_r_triples, indent=1))
 
+print("Writing to", OUTPUT_DIR, "/link_base_id_tail.txt")
 os.makedirs(os.path.dirname(OUTPUT_DIR + "/link_base_id_tail.txt"), exist_ok=True)
 with open(OUTPUT_DIR + "/link_base_id_tail.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_link_base_id_tail, indent=1))
 
+print("Writing to", OUTPUT_DIR, "/link_base_id_head.txt")
 os.makedirs(os.path.dirname(OUTPUT_DIR + "/link_base_id_head.txt"), exist_ok=True)
 with open(OUTPUT_DIR + "/link_base_id_head.txt", "w+") as file:
     file.write(json.dumps(demonstrations_T_link_base_id_head, indent=1)) 
 
+print("Writing to", OUTPUT_DIR, "/test_answer.txt")
 os.makedirs(os.path.dirname(OUTPUT_DIR + "/test_answer.txt"), exist_ok=True)  
 with open(OUTPUT_DIR + "/test_answer.txt", "w+") as file:
     file.write(json.dumps(test_questions, indent=1))
@@ -319,10 +351,12 @@ for triplet in test_triplet:
     all_answer_tail['\t'.join([head_, relation_])] = all_answer_tail_raw['\t'.join([head_, relation_])]
     all_answer_head['\t'.join([tail_, relation_])] = all_answer_head_raw['\t'.join([tail_, relation_])]
 
+print("Writing to", OUTPUT_DIR, "/filter_head.txt")
 os.makedirs(os.path.dirname(OUTPUT_DIR + "/filter_head.txt"), exist_ok=True)
 with open(OUTPUT_DIR + "/filter_head.txt",'w+') as load_f:
     load_f.write(json.dumps(all_answer_head, indent=1))
 
+print("Writing to", OUTPUT_DIR, "/filter_tail.txt")
 os.makedirs(os.path.dirname(OUTPUT_DIR + "/filter_tail.txt"), exist_ok=True)
 with open(OUTPUT_DIR + "/filter_tail.txt",'w+') as load_f:
     load_f.write(json.dumps(all_answer_tail, indent=1))
