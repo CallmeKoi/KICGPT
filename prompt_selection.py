@@ -11,6 +11,7 @@ Prompt Engineering:
 '''
 import json
 from gensim.summarization.bm25 import BM25 # deprecated => replace with alt package
+from rank_bm25 import BM25Okapi
 from gensim import corpora
 import operator
 from collections import defaultdict
@@ -98,7 +99,8 @@ class Demon_sampler:
         texts = ['\t'.join(triple) for triple in demon_list]
         dictionary = corpora.Dictionary([text.split() for text in texts])
         corpus = [dictionary.doc2bow(text.split()) for text in texts]
-        bm25 = BM25(corpus) #replace with alt 
+        # bm25 = BM25(corpus) #replace with alt 
+        bm25 = BM25Okapi(corpus)
         query = dictionary.doc2bow(question_text.split())
         scores = bm25.get_scores(query) #replace with alt
         scored_triples = list(zip(demon_list, scores))
