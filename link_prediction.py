@@ -398,6 +398,8 @@ def main(args, all_data, idx, api_key):
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    ## petition to add a dataset directory argument here
+    parser.add_argument('--dataset_dir', default=None)
     parser.add_argument('--dataset', default="fb15k-237")
     parser.add_argument('--candidate_num', default=50, type=int)
     parser.add_argument('--output_path', default="./outputs/fb15k-237/output_tail.txt")
@@ -441,7 +443,7 @@ if __name__ == '__main__':
     test_triplet = []
 
 
-    with open("dataset/" + args.dataset + "/test_answer.txt",'r') as load_f:
+    with open(os.path.join(args.DATASET_DIR, args.dataset) + "/test_answer.txt",'r') as load_f:
         test_triplet=json.load(load_f)
     print("Totally %d test examples." % len(test_triplet))
 
