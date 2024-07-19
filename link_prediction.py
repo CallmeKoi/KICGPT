@@ -443,7 +443,7 @@ if __name__ == '__main__':
     test_triplet = []
 
 
-    with open(os.path.join(args.DATASET_DIR, args.dataset) + "/test_answer.txt",'r') as load_f:
+    with open(os.path.join(args.dataset_dir, args.dataset) + "/test_answer.txt",'r') as load_f:
         test_triplet=json.load(load_f)
     print("Totally %d test examples." % len(test_triplet))
 
