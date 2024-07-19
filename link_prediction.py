@@ -317,22 +317,22 @@ class Solver:
         self.selected_demonstrations = []
         
     def load_all_candidate_answers(self):
-        with open("dataset/" + self.args.dataset + "/retriever_candidate_"+ args.query +".txt",'r') as load_f:
+        with open(os.path.join(self.args.dataset_dir, self.args.dataset) + "/retriever_candidate_"+ args.query +".txt",'r') as load_f:
             self.all_candidate_answers=json.load(load_f)
             
     def load_align_text(self):
-        with open("dataset/" + self.args.dataset + "/alignment/alignment_clean.txt",'r') as load_f:
+        with open(os.path.join(self.args.dataset_dir, self.args.dataset) + "/alignment/alignment_clean.txt",'r') as load_f:
             self.align_text=json.load(load_f)      
             
     def load_rel_txt_to_id(self):
-        with open('dataset/' + self.args.dataset + '/get_neighbor/relation2id.txt', 'r') as file:
+        with open(os.path.join(self.args.dataset_dir, self.args.dataset) + '/get_neighbor/relation2id.txt', 'r') as file:
             relation_lines = file.readlines()
             for line in relation_lines:
                 _name, _id = line.strip().split("\t")
                 self.rel2id[_name] = _id
                 
     def load_ent_map_id(self):
-        with open('dataset/' + self.args.dataset + '/get_neighbor/entity2id.txt', 'r') as file:
+        with open(os.path.join(self.args.dataset_dir, self.args.dataset) + '/get_neighbor/entity2id.txt', 'r') as file:
             entity_lines = file.readlines()
             for line in entity_lines:
                 _name, _id = line.strip().split("\t")
@@ -341,7 +341,7 @@ class Solver:
     
     
     def load_ent_to_text(self):
-        with open('dataset/' + self.args.dataset + '/entity2text.txt', 'r') as file:
+        with open(os.path.join(self.args.dataset_dir, self.args.dataset) + '/entity2text.txt', 'r') as file:
             entity_lines = file.readlines()
             for line in entity_lines:
                 ent, text = line.strip().split("\t")
