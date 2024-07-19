@@ -10,6 +10,7 @@ Prompt Engineering:
 8. question is/are
 '''
 import json
+# import os
 # from gensim.summarization.bm25 import BM25 # deprecated => replace with alt package
 from rank_bm25 import BM25Okapi
 from gensim import corpora
@@ -34,10 +35,10 @@ class Demon_sampler:
         self.demo_list_execution = []
         
     def load_demonstration(self):
-        with open("dataset/" + self.dataset + "/demonstration/"+ self.args.query +"_supplement.txt", "r") as f:
+        with open(os.path.join(self.args.dataset_dir, self.dataset) + "/demonstration/"+ self.args.query +"_supplement.txt", "r") as f:
             supplement_pool = json.load(f)
 
-        with open("dataset/" + self.dataset + "/demonstration/"+ self.args.query +"_analogy.txt", "r") as f:
+        with open(os.path.join(self.args.dataset_dir, self.dataset) + "/demonstration/"+ self.args.query +"_analogy.txt", "r") as f:
             analogy_pool = json.load(f)
 
         keys = self.ent2text.keys()
@@ -139,7 +140,7 @@ class Demon_sampler:
 
         
     def shrink_link_base(self):
-        with open("dataset/" + self.dataset + "/demonstration/"+ "T_link_base_"+ self.args.query +".txt", "r") as f:
+        with open(os.path.join(self.args.dataset_dir, self.dataset) + "/demonstration/"+ "T_link_base_"+ self.args.query +".txt", "r") as f:
             self.link_base = json.load(f)
         
         for key in self.link_base:
@@ -156,7 +157,7 @@ class Demon_sampler:
             self.T_link_base[key] = [h_text,r,enetity_link_base]
 
     def load_ent_to_text(self):
-            with open('dataset/' + self.dataset + '/entity2text.txt', 'r') as file:
+            with open(os.path.join(self.args.dataset_dir, self.dataset) + '/entity2text.txt', 'r') as file:
                 entity_lines = file.readlines()
                 for line in entity_lines:
                     ent, text = line.strip().split("\t")
